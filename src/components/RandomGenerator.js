@@ -1,28 +1,59 @@
 import React, { useState } from "react";
-import apiClient from '../apis/apiClient';
+import apiClient from "../apis/apiClient";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Checkbox from "@material-ui/core/Checkbox";
+import ListDisplay from "../randGenerator/ListDisplay";
 
 export default function RandomGenerator() {
-    const [randomNumList, setRandomNumList] = useState([]);
-    const getData = () => {
-        apiClient
-      .post("/json-random",{num:10})
+  const [randomNumLists, setRandomNumLists] = useState([new Array(1)]);
+  const [listLength, setListLength] = useState(0);
+  const [numLists, setNumLists] = useState(0);
+  const [checked, setChecked] = useState(false);
+
+  const getData = () => {
+    apiClient
+      .post("/json-random", { num: listLength, numLists: numLists, repeatNums: checked })
       .then(response => {
         if (response.status === 200) {
-          setRandomNumList(response.data);
+          setRandomNumLists(response.data);
         } else {
-          setRandomNumList([]);
-          console.log('Failed');
+          setRandomNumLists([]);
+          console.log("Failed");
         }
       })
       .catch(error => {
         console.log(`Error: ${error.message}`);
       });
-    }
-    return (
-        
+  };
+  return (
     <div>
-        {randomNumList.length > 0 ? randomNumList.map((num,index)=> <span key={index}>{num}, </span> ):<div>no data</div>}
-      <button onClick= {getData}> Generate </button>
+      <form onSubmit={getData}>
+        <TextField
+          onChange={e => {
+            setListLength(parseInt(e.target.value));
+          }}
+          label="How many values in a list?"
+        ></TextField>
+        <TextField
+          onChange={e => {
+            setNumLists(parseInt(e.target.value));
+          }}
+          label="How many lists?"
+        ></TextField>
+        <Checkbox checked={checked} onClick={()=> setChecked(!checked)} label="repeating numbers?"></Checkbox>
+        {console.log(checked)}
+        <Button
+          onClick={() => {
+            getData();
+          }}
+        >
+          {" "}
+          Generate{" "}
+        </Button>
+      </form>
+      {console.log("Array1", randomNumLists)}
+      <ListDisplay randNum2dArray={randomNumLists} />
     </div>
   );
 }
