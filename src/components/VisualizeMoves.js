@@ -26,22 +26,25 @@ function Visualizer({ numArray, actionList, timeout }) {
         shiftPos: 0,
       }))
     );
+    setActionStep(-1);
+    setText("Next");
   }, [numArray]);
-  const [index1, setIndex1] = useState(0);
-  const [index2, setIndex2] = useState(0);
-  const [actionStep, setActionStep] = useState(0);
+  const [actionStep, setActionStep] = useState(-1);
   const [text, setText] = useState("Next");
 
   const handleChange = () => {
     let nextAction;
-    if (actionStep !== actionList.length - 1) {
-        nextAction = actionStep + 1  
-      } else {
-        return setText("Done");
-      }
+    let index1 = 0;
+    let index2 = 0;
+    if (actionStep >= actionList.length - 1) {
+      setActionStep(-1);
+      return setText("Done");
+    } else {
+      nextAction = actionStep + 1;
+    }
     const step = actionList[nextAction].action;
-    setIndex1(actionList[nextAction].index[0] + 1);
-    setIndex2(actionList[nextAction].index[1] + 1);
+    index1 = actionList[nextAction].index[0] + 1;
+    index2 = actionList[nextAction].index[1] + 1;
     if (step === "Swap") {
       let delta = index2 - index1;
       let newValues = [...values];
@@ -75,7 +78,11 @@ function Visualizer({ numArray, actionList, timeout }) {
           {text}
         </Button>
         <BoxList
-          action={actionList.length !== 0 ? actionList[actionStep] : null}
+          action={
+            actionList.length !== 0 || actionStep !== -1
+              ? actionList[actionStep]
+              : null
+          }
           values={values}
         />
       </div>

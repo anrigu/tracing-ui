@@ -4,6 +4,9 @@ import Button from "@material-ui/core/Button";
 import Input from "@material-ui/core/Input";
 
 function checkColour( action, value ) {
+  if (!action) {
+    return false;
+  }
   console.error('action', action, value)
   if (action.action === "Compare") {
     return (

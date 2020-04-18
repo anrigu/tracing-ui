@@ -43,7 +43,7 @@ export const getData = () => {
   return (dispatch) => {
     dispatch(ui.actions.setShowSpinner({ showSpinner: true }));
     apiClient
-      .post("/bubble-sort", { numNums: 10, repeatNums: false })
+      .post("/bubble-sort", { numNums: 4, repeatNums: false })
       .then((response) => {
         if (response.status === 200) {
           dispatch(
