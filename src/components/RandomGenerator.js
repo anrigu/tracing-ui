@@ -5,6 +5,9 @@ import TextField from "@material-ui/core/TextField";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListDisplay from "../randGenerator/ListDisplay";
 
+/**
+ * Function used to create a random number generator component
+ */
 export default function RandomGenerator() {
   const [randomNumLists, setRandomNumLists] = useState([new Array(1)]);
   const [listLength, setListLength] = useState(0);
