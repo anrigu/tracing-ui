@@ -15,24 +15,22 @@ const description = {
 function BubbleSort(props) {
   const [buttonClick, setButtonClick] = useState(0);
   return (
-    (
-      <Grid container direction="column">
-        <Typography variant="h3">Visualize the bubble sort</Typography>
-        <Grid item>
-          <Button
-            onClick={() => {
-              props.getData();
-              console.log(props.actionList);
-              console.log(props.numArray);
+    <Grid container direction="column">
+      <Typography variant="h3">Visualize the bubble sort</Typography>
+      <Grid item>
+        <Button
+          onClick={() => {
+            props.getData();
+            console.log(props.actionList);
+            console.log(props.numArray);
             //   console.log('numarray',props.numArray)
-            }}
-          >
-            Generate random array
-          </Button>
-          {props.numArray.length !== 0 ? <Visualizer /> : null}
-        </Grid>
+          }}
+        >
+          Generate random array
+        </Button>
+        <Visualizer />
       </Grid>
-    )
+    </Grid>
   );
 }
 

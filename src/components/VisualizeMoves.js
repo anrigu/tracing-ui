@@ -1,135 +1,84 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { Button, Typography } from "@material-ui/core";
-import { bindActionCreators } from "redux";
+import { Button } from "@material-ui/core";
 import BoxList from "../switchBox/BoxList";
 
+const posShift = (delta, index, shift, value) => {
+  value.shiftPos += delta;
+  shift.key = index;
+  shift.shift = value.pos + delta;
+};
+
 function Visualizer({ numArray, actionList }) {
-  const [valuesObj, setValuesObj] = useState({
-    val1: {
-      value: numArray[0],
-      pos: 1,
+  const [values, setValues] = useState(
+    numArray.map((val, index) => ({
+      value: val,
+      pos: index + 1,
       shiftPos: 0,
-    },
-    val2: {
-      value: numArray[1],
-      pos: 2,
-      shiftPos: 0,
-    },
-    val3: {
-      value: numArray[2],
-      pos: 3,
-      shiftPos: 0,
-    },
-    val4: {
-      value: numArray[3],
-      pos: 4,
-      shiftPos: 0,
-    },
-    val5: {
-      value: numArray[4],
-      pos: 5,
-      shiftPos: 0,
-    },
-    val6: {
-      value: numArray[5],
-      pos: 6,
-      shiftPos: 0,
-    },
-    val7: {
-      value: numArray[6],
-      pos: 7,
-      shiftPos: 0,
-    },
-    val8: {
-      value: numArray[7],
-      pos: 8,
-      shiftPos: 0,
-    },
-    val9: {
-      value: numArray[8],
-      pos: 9,
-      shiftPos: 0,
-    },
-    val10: {
-      value: numArray[9],
-      pos: 10,
-      shiftPos: 0,
-    },
-  });
-//   console.log("actionListLIst", actionList);
+    }))
+  );
+
+  useEffect(() => {
+    setValues(
+      numArray.map((val, index) => ({
+        value: val,
+        pos: index + 1,
+        shiftPos: 0,
+      }))
+    );
+  }, [numArray]);
   const [index1, setIndex1] = useState(0);
   const [index2, setIndex2] = useState(0);
   const [actionStep, setActionStep] = useState(0);
-  const [text, setText] = useState('Next');
-  return (
-    // console.log(actionList),
-    // console.log("first", valuesObj),
-    (
-      <div>
-        <div>
-          <Button
-            onClick={() => {
-              const step = actionList[actionStep].action;
-              setIndex1(actionList[actionStep].index[0] + 1);
-              setIndex2(actionList[actionStep].index[1] + 1);
-              if (step === "Swap") {
-                // console.log("jhgfs", index1);
-                // console.log("zxcv", index2);
-                let i;
-                let shift = index2 - index1;
-                let newValuesObj = { ...valuesObj };
-                let key;
-                let key2;
-                let firstShift;
-                let secondShift;
-                for (i = 1; i <= Object.keys(valuesObj).length; i++) {
-                //   console.log(i);
-                  let referenceVar = newValuesObj[`val${i}`];
-                  if (`val${referenceVar.pos}` === `val${index1}`) {
-                    referenceVar.shiftPos += shift;
-                    key = `val${i}`;
-                    firstShift = referenceVar.pos + shift;
-                    // console.log("firstshift", firstShift);
-                  }
-                  if (`val${referenceVar.pos}` === `val${index2}`) {
-                    referenceVar.shiftPos -= shift;
-                    key2 = `val${i}`;
-                    secondShift = referenceVar.pos - shift;
-                    // console.log("second", secondShift);
-                  }
-                }
-                newValuesObj[key].pos = firstShift;
-                newValuesObj[key2].pos = secondShift;
-                // console.log("sakdnsa", newValuesObj[key]);
-                // console.log("sasdasdasdasdakdnsa", newValuesObj[key2]);
-                // console.log("grefd", newValuesObj);
+  const [text, setText] = useState("Next");
 
-                setValuesObj(newValuesObj);
-              }
-            //   console.log("actioStep", actionStep);
-              if (actionStep !== actionList.length - 1) {
-                setActionStep(actionStep + 1);
-              }
-              else {
-                  return (
-                      setText('Done')
-                  )
-              }
-            }}
-            variant="outlined"
-            style={{ margin: "5px" }}
-          >
-            {text}
-          </Button>
-          {/* {console.log("actionList", actionList)} */}
-          <BoxList
-            action={actionList.length !== 0 ? actionList[actionStep] : null}
-            valuesObj={valuesObj}
-          />
-        </div>
+  const handleChange = () => {
+    const step = actionList[actionStep].action;
+    setIndex1(actionList[actionStep].index[0] + 1);
+    setIndex2(actionList[actionStep].index[1] + 1);
+    if (step === "Swap") {
+      let delta = index2 - index1;
+      let newValues = [...values];
+      let shifts = [
+        { key: 0, shift: 0 },
+        { key: 0, shift: 0 },
+      ];
+      values.forEach((value, index) => {
+        if (value.pos === index1) {
+          posShift(delta, index, shifts[0], value);
+        } else if (value.pos === index2) {
+          posShift(-delta, index, shifts[1], value);
+        }
+      });
+
+      newValues[shifts[0].key].pos = shifts[0].shift;
+      newValues[shifts[1].key].pos = shifts[1].shift;
+
+      setValues(newValues);
+    }
+    if (actionStep !== actionList.length - 1) {
+      setActionStep(actionStep + 1);
+    } else {
+      return setText("Done");
+    }
+  };
+
+  return (
+    <div>
+      <div>
+        <Button
+          onClick={handleChange}
+          variant="outlined"
+          style={{ margin: "5px" }}
+        >
+          {text}
+        </Button>
+        <BoxList
+          action={actionList.length !== 0 ? actionList[actionStep] : null}
+          values={values}
+        />
       </div>
-    )
+    </div>
   );
 }
 

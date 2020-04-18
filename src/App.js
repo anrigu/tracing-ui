@@ -13,7 +13,6 @@ import BubbleSort from './components/BubbleSort';
  * Function used to route certain url's to different components
  */
 function App() {
-  var x = require("./components/RandomGenerator");
   return (
     <Provider store = {store}>
     <Router>
