@@ -9,7 +9,7 @@ const posShift = (delta, index, shift, value) => {
   shift.shift = value.pos + delta;
 };
 
-function Visualizer({ numArray, actionList }) {
+function Visualizer({ numArray, actionList, timeout }) {
   const [values, setValues] = useState(
     numArray.map((val, index) => ({
       value: val,
@@ -33,9 +33,15 @@ function Visualizer({ numArray, actionList }) {
   const [text, setText] = useState("Next");
 
   const handleChange = () => {
-    const step = actionList[actionStep].action;
-    setIndex1(actionList[actionStep].index[0] + 1);
-    setIndex2(actionList[actionStep].index[1] + 1);
+    let nextAction;
+    if (actionStep !== actionList.length - 1) {
+        nextAction = actionStep + 1  
+      } else {
+        return setText("Done");
+      }
+    const step = actionList[nextAction].action;
+    setIndex1(actionList[nextAction].index[0] + 1);
+    setIndex2(actionList[nextAction].index[1] + 1);
     if (step === "Swap") {
       let delta = index2 - index1;
       let newValues = [...values];
@@ -53,14 +59,9 @@ function Visualizer({ numArray, actionList }) {
 
       newValues[shifts[0].key].pos = shifts[0].shift;
       newValues[shifts[1].key].pos = shifts[1].shift;
-
       setValues(newValues);
     }
-    if (actionStep !== actionList.length - 1) {
-      setActionStep(actionStep + 1);
-    } else {
-      return setText("Done");
-    }
+    setActionStep(nextAction);
   };
 
   return (

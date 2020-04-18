@@ -9,8 +9,8 @@ export default function Box(props) {
         height: "100%",
         border: "1px solid #b4b4b4",
         transform: `translateX(${props.translate * 100}%)`,
-        transition: '2s ease-in-out',
-        background: props.color ? 'gray':'white',
+        transition: `${!props.transTime ? 0.5 : props.transTime}s ease-in-out`,
+        background: props.color ? "grey" : "white",
       }}
     >
       <Grid container justify="center" alignItems="center">

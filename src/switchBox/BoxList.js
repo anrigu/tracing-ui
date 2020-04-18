@@ -3,7 +3,7 @@ import Box from "./Box";
 import Button from "@material-ui/core/Button";
 import Input from "@material-ui/core/Input";
 
-function checkColour(action, value) {
+function checkColour( action, value ) {
   console.error('action', action, value)
   if (action.action === "Compare") {
     return (
@@ -28,6 +28,7 @@ export default function BoxList({ action, values }) {
                 key={index}
                 value={value.value}
                 translate={value.shiftPos}
+                transTime= {0.5}
                 color={checkColour(action, value)}
               ></Box>
             );
