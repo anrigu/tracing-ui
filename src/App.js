@@ -18,22 +18,23 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/random">
-          <RandomGenerator />
+          {/* temp path component */}
+          <MainLayout Component = {<RandomGenerator/>}/>
         </Route>
         <Route exact path="/binary-search">
-          <BoxList />
+        <MainLayout Component = {<BoxList/>}/>
         </Route>
         <Route exact path="/selection-sort">
-          <RandomGenerator />
+        <MainLayout Component = {<RandomGenerator/>}/>
         </Route>
         <Route exact path="/insertion-sort">
-          <InsertionSort></InsertionSort>
+        <MainLayout Component = {<InsertionSort/>}/>
         </Route>
         <Route exact path="/bubble-sort">
-          <BubbleSort />
+        <MainLayout Component = {<BubbleSort/>}/>
         </Route>
         <Route exact path="/user-code">
-          <UserInput />
+        <MainLayout Component = {<UserInput/>}/>
         </Route>
         <Route path="/">
           <MainLayout />

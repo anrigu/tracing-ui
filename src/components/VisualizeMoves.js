@@ -19,6 +19,13 @@ function Visualizer({ numArray, actionList, timeout }) {
     }))
   );
   const [autoplay, setAutoplay] = useState(false);
+
+  const [actionStep, setActionStep] = useState(-1);
+  const [text, setText] = useState("Next");
+  const [autoPlayText, setAutoplayText] = useState("Start autoplay");
+  const [done, setDone] = useState(false);
+  const [reset, setReset] = useState(false);
+
   useEffect(() => {
     setValues(
       numArray.map((val, index) => ({
@@ -28,11 +35,9 @@ function Visualizer({ numArray, actionList, timeout }) {
       }))
     );
     setActionStep(-1);
+    setDone(false);
     setText("Next");
-  }, [numArray]);
-
-  const [actionStep, setActionStep] = useState(-1);
-  const [text, setText] = useState("Next");
+  }, [numArray, reset]);
 
   const handleChange = () => {
     console.log("handle", actionStep);
@@ -40,53 +45,75 @@ function Visualizer({ numArray, actionList, timeout }) {
     let index1 = 0;
     let index2 = 0;
     if (actionStep >= actionList.length - 1) {
+      setDone(true);
       setActionStep(-1);
       return setText("Done");
     } else {
-      nextAction = actionStep + 1;
-    }
-    const step = actionList[nextAction].action;
-    index1 = actionList[nextAction].index[0] + 1;
-    index2 = actionList[nextAction].index[1] + 1;
-    if (step === "Swap") {
-      let delta = index2 - index1;
-      let newValues = [...values];
-      let shifts = [
-        { key: 0, shift: 0 },
-        { key: 0, shift: 0 },
-      ];
-      values.forEach((value, index) => {
-        if (value.pos === index1) {
-          posShift(delta, index, shifts[0], value);
-        } else if (value.pos === index2) {
-          posShift(-delta, index, shifts[1], value);
-        }
-      });
+      if (!done) {
+        nextAction = actionStep + 1;
 
-      newValues[shifts[0].key].pos = shifts[0].shift;
-      newValues[shifts[1].key].pos = shifts[1].shift;
-      setValues(newValues);
+        const step = actionList[nextAction].action;
+        index1 = actionList[nextAction].index[0] + 1;
+        index2 = actionList[nextAction].index[1] + 1;
+        if (step === "Swap") {
+          let delta = index2 - index1;
+          let newValues = [...values];
+          let shifts = [
+            { key: 0, shift: 0 },
+            { key: 0, shift: 0 },
+          ];
+          values.forEach((value, index) => {
+            if (value.pos === index1) {
+              posShift(delta, index, shifts[0], value);
+            } else if (value.pos === index2) {
+              posShift(-delta, index, shifts[1], value);
+            }
+          });
+
+          newValues[shifts[0].key].pos = shifts[0].shift;
+          newValues[shifts[1].key].pos = shifts[1].shift;
+          setValues(newValues);
+        }
+        console.log("nextaction", nextAction);
+        setActionStep(nextAction);
+      }
     }
-    console.log("nextaction", nextAction);
-    setActionStep(nextAction);
   };
 
-  const [interval, changeInterval] = useState(0);
-
-  useInterval(handleChange, 1000);
+  useEffect(() => {
+    if (autoplay) {
+      setTimeout(handleChange, 1000);
+    }
+  }, [autoplay, actionStep]);
 
   return (
     <div>
       <div>
         <Button
           onClick={handleChange}
+          disabled={autoplay || done ? true : false}
           variant="outlined"
           style={{ margin: "5px" }}
         >
           {text}
         </Button>
-        <Button onClick={() => setAutoplay(!autoplay)} variant="outlined">
-          AutoPlay
+        <Button
+          onClick={() => {
+            setAutoplay(!autoplay);
+            setAutoplayText(autoplay ? "Start Autoplay" : "Stop Autoplay");
+          }}
+          variant="outlined"
+          disabled={done ? true : false}
+        >
+          {autoPlayText}
+        </Button>
+        <Button
+          onClick={() => {
+            setReset(!reset);
+          }}
+          variant="outlined"
+        >
+          Reset
         </Button>
         <BoxList
           action={

@@ -29,9 +29,6 @@ export default function TopBar() {
                 </Typography>
             </Grid>
             <Grid container item xs={4} justify='flex-end'>
-                <Button>
-                    TextButton
-                </Button>
             </Grid>
         </Grid>
     )

@@ -29,8 +29,8 @@ export default function SideBar({ items }) {
   const classes = useStyles();
   return (
     <List className={classes.root}>
-      {items.map(itemInfo => (
-        <ListItem button>
+      {items.map((itemInfo,ind) => (
+        <ListItem button key = {ind}>
           <ListItemText onClick={() => history.push(`/${itemInfo.path}`)}>
             <Typography variant="overline">{itemInfo.name}</Typography>
           </ListItemText>

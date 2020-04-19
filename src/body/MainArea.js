@@ -16,13 +16,13 @@ const useStyles = makeStyles(theme => ({
 /**
  * Function used to create a main area for the components
  */
-export default function MainArea() {
+export default function MainArea({Component}) {
     const classes = useStyles();
     return (
         <Grid container direction = 'row' className={classes.root}>
             <Grid item xs={12}>
                 <TopBar/>
-                {/*Body*/}
+                {Component}
             </Grid>
         </Grid>
     )

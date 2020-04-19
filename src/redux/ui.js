@@ -12,11 +12,15 @@ const ui = createSlice({
     setActionList(state, { payload: data }) {
       state.actionList = data.actionList;
     },
+    setNumNums(state, {payload: numNums}) {
+      state.numNums = numNums;
+    }
   },
   initialState: {
     showSpinner: false,
     numArray: [],
     actionList: [],
+    numNums:10,
   },
   name: "ui",
 });
@@ -40,10 +44,11 @@ export const thunk = () => {
 };
 
 export const getData = () => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const state = getState();
     dispatch(ui.actions.setShowSpinner({ showSpinner: true }));
     apiClient
-      .post("/bubble-sort", { numNums: 10, repeatNums: false })
+      .post("/bubble-sort", { numNums: state.ui.numNums, repeatNums: false })
       .then((response) => {
         if (response.status === 200) {
           dispatch(

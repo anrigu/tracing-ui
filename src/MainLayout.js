@@ -29,14 +29,14 @@ const SideBarTopics = {
 /**
  * Function used to create the main layout of the application
  */
-export default function MainLayout() {
+export default function MainLayout({Component}) {
   return (
     <Grid container direction='row' style={{ height: "100vh" }}>
       <Grid container item xs={2}>
         <SideBar items={Object.values(SideBarTopics)} />
       </Grid>
       <Grid item container direction="column" xs={10}>
-        <MainArea/>
+        <MainArea Component = {Component}/>
       </Grid>
     </Grid>
   );
