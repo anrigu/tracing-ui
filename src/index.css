@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@keyframes backgroundChangeFrame {
+      0%   {background: white;}
+      25% {background: rgb(190, 190, 190);}
+      50% {background: rgb(120, 120, 120);}
+      25% {background: rgb(190, 190, 190);}
+      100%   {background: white;}
+}
+
+.flashBackground {
+  animation: backgroundChangeFrame 1s infinite;
+}
+
+.normalBackground {
+}

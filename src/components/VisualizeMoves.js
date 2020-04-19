@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Button } from "@material-ui/core";
 import BoxList from "../switchBox/BoxList";
+import useInterval from "./useInterval";
 
 const posShift = (delta, index, shift, value) => {
   value.shiftPos += delta;
@@ -17,7 +18,7 @@ function Visualizer({ numArray, actionList, timeout }) {
       shiftPos: 0,
     }))
   );
-
+  const [autoplay, setAutoplay] = useState(false);
   useEffect(() => {
     setValues(
       numArray.map((val, index) => ({
@@ -29,10 +30,12 @@ function Visualizer({ numArray, actionList, timeout }) {
     setActionStep(-1);
     setText("Next");
   }, [numArray]);
+
   const [actionStep, setActionStep] = useState(-1);
   const [text, setText] = useState("Next");
 
   const handleChange = () => {
+    console.log("handle", actionStep);
     let nextAction;
     let index1 = 0;
     let index2 = 0;
@@ -64,8 +67,13 @@ function Visualizer({ numArray, actionList, timeout }) {
       newValues[shifts[1].key].pos = shifts[1].shift;
       setValues(newValues);
     }
+    console.log("nextaction", nextAction);
     setActionStep(nextAction);
   };
+
+  const [interval, changeInterval] = useState(0);
+
+  useInterval(handleChange, 1000);
 
   return (
     <div>
@@ -76,6 +84,9 @@ function Visualizer({ numArray, actionList, timeout }) {
           style={{ margin: "5px" }}
         >
           {text}
+        </Button>
+        <Button onClick={() => setAutoplay(!autoplay)} variant="outlined">
+          AutoPlay
         </Button>
         <BoxList
           action={

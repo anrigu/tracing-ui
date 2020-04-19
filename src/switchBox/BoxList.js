@@ -7,7 +7,7 @@ function checkColour( action, value ) {
   if (!action) {
     return false;
   }
-  console.error('action', action, value)
+
   if (action.action === "Compare") {
     return (
       action.index[0] + 1 === value.pos ||

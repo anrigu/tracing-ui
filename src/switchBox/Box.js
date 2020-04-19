@@ -2,6 +2,7 @@ import React from "react";
 import { Typography, Grid, Button } from "@material-ui/core";
 
 export default function Box(props) {
+  const className = props.color ? 'flashBackground' : 'normalBackground';
   return (
     <div
       style={{
@@ -10,8 +11,8 @@ export default function Box(props) {
         border: "1px solid #b4b4b4",
         transform: `translateX(${props.translate * 100}%)`,
         transition: `${!props.transTime ? 0.5 : props.transTime}s ease-in-out`,
-        background: props.color ? "grey" : "white",
       }}
+      className = {className}
     >
       <Grid container justify="center" alignItems="center">
         <Typography variant="caption">{props.value}</Typography>
